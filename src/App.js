@@ -5,7 +5,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import PgFOF from './components/PgFOF'
 import Cart from './components/Cart';
-import Profile from './components/Profile';
+import UserProfile from './components/UserProfile';
 
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         <Route exact path='/signup' element={<Signup/>} />
         <Route exact path='/login' element={<Login/>} />
         <Route exact path='/cart' element={<Cart/>} />
-        <Route exact path='/userprofile' element={<Profile/>}/>
+        <Route exact path='/userprofile' element={<UserProfile/>}/>
         <Route path="*" element={<PgFOF/>} />
         
       
