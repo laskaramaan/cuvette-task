@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from './Navbar'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth, db } from '../FirebaseConfigs/firebaseConfigs'
 import { collection, addDoc } from 'firebase/firestore'
 import './Login.css'
@@ -15,6 +15,38 @@ function Login() {
     const navigate = useNavigate()
     const auth = getAuth()
 
+    const handleLogin = (e) => {
+        e.preventDefault()
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                setSuccessMsg('Logged in successfully, you will be redirected to home page')
+
+                setEmail('')
+                setPassword('')
+                setErrorMsg('')
+                setTimeout(() => {
+                    setSuccessMsg('');
+                    navigate('/home');
+
+                }, 3000);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log(error.message)
+                if (error.message === 'Firebase: Error (auth/invalid-email).') {
+                    setErrorMsg(' Please fill all requied fields')
+                }
+                if (error.message === 'Firebase: Error (auth/user-not-found).') {
+                    setErrorMsg(' Email not found')
+                }
+                if (error.message === 'Firebase: Error (auth/wrong-password).') {
+                    setErrorMsg(' Wrong Password')
+                }
+
+            })
+
+    }
+
 
     return (
         <div>
@@ -24,20 +56,23 @@ function Login() {
                 <form className='login-form' >
                     <p>Login </p>
 
+                    {/* Success mssge ke andar kuch hai to wo show kr do */}
                     {successMsg && <>
-                    <div className='success-msg'>
-                        {successMsg}
+                        <div className='success-msg'>
+                            {successMsg}
                         </div></>}
-                    {errorMsg && <>
-                    <div className='error-msg'>
-                        {errorMsg}
 
-                    </div>
+                    {/* Error mssge ke andar kuch hai to wo show kr do  */}
+                    {errorMsg && <>
+                        <div className='error-msg'>
+                            {errorMsg}
+
+                        </div>
                     </>}
 
 
 
-                    
+
                     <label>Email</label>
                     <input onChange={(e) => setEmail(e.target.value)}
                         type='email' placeholder="Your Email" />
@@ -46,7 +81,7 @@ function Login() {
                     <input onChange={(e) => setPassword(e.target.value)}
                         type='password' placeholder='Your password' />
 
-                    
+
 
                     <button onClick={handleLogin}>Login</button>
 
