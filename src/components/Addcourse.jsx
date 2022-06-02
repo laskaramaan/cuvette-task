@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react'
+import Navbar from './Navbar'
 import {storage, auth, db } from '../FirebaseConfigs/firebaseConfigs'
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore'
-import { useNavigate } from 'react-router-dom'
-import { getDownloadURL,ref,uploadBytes } from 'firebase/storage'
-import Navbar from './Navbar'
+import {useNavigate} from 'react-router-dom'
+import {getDownloadURL, ref, uploadBytes} from 'firebase/storage'
 
 
 function Addcourse() {
 
-    const [coursetitle,setCoursetitle] = useState('');
-    const [description,setDescription] = useState('');
-    const [price, setPrice] = useState("");
-    const [coursevideo, setCourseVideo] = useState('');
-    const [imageError, setImageError] = useState('');
+    const [coursetitle,setcoursetitle] = useState("");
+    const [coursecategory ,setcoursecategory] = useState("");
+    const [description, setDescription] = useState("");
+    const [brand, setBrand] = useState("");
+    const [price , setPrice] = useState("");
+    const [coursevideo, setcoursevideo] = useState("");
+
+    const [videoError, setvideoError] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
-    const [uploadError, setUploadError] = useState('')
+    const [uploadError, setUploadError] = useState('');
+ 
 
     function GetCurrentUser() {
         const [user, setUser] = useState('')
@@ -44,70 +48,83 @@ function Addcourse() {
         return user
 
 
-    }   
+    }
     const loggeduser = GetCurrentUser();
-    // if(loggeduser){console.log(loggeduser[0])}
+    //if(loggeduser){console.log(loggeduser[0])}
 
 
-
-
-    const handleCourseVideo = (e)=>{
+    const handleCourseVideo = (e)=> {
         e.preventDefault();
         let selectedFile = e.target.files[0];
 
-        if(selectedFile){
-            setCourseVideo(selectedFile);
-        }
-        else{
-            setImageError('Please select your file')
+        if(selectedFile)
+        {
+          
+            setcoursevideo(selectedFile)
+            setvideoError('')
 
         }
+        else
+        {
+            setvideoError("Please select your file")
 
-
+        }
     }
 
-    const handleAddProduct = (e)=> {
+    // handleAddCourse function is responsible for storing data to firestore
+    const handleAddCourse = (e) => {
         e.preventDefault();
+        const storageRef = ref(storage, `product-images${coursecategory.toUpperCase()}/${Date.now()}`)
+
+        uploadBytes(storageRef,coursevideo).then(()=>{
+            getDownloadURL(storageRef).then(url =>{
+                addDoc(collection(db,  `products-${coursecategory.toUpperCase()} `),{
+                    coursetitle,
+                coursecategory,
+                description,
+                price,
+                coursevideo: url
+
+                })
+            })
+        })
+
+
     }
-
-
-
 
     return (
         <div>
             <Navbar />
-            {loggeduser ? 
-            <div>
-                {/* HandleAddProduct function will store all the info in firebase storage */}
+            {loggeduser ?
+                <div className='addprod-container'>
+                    <form className='addprod-form' onSubmit={handleAddCourse}>
+                        <p>Add Course</p>
+                        {successMsg && <div className='success-msg'>{successMsg}</div>}
+                        {uploadError && <div className='error-msg'>{uploadError}</div>}
 
+                        <label>Course tile</label>
+                        <input type='text' onChange={(e)=>{setcoursetitle(e.target.value)}} placeholder='course title'/>
 
-                <form className='addcourse-form' onSubmit={handleAddProduct}>
-                    <p>Add Course details</p>
+                        <label>Course Category</label>
+                        <input type='text' onChange={(e)=>{setcoursecategory(e.target.value)}} placeholder='course Category'/>
+                        
+                        <label>Course Video</label>
+                        <input onChange={handleCourseVideo} type='file' />
+                        {videoError && <>
+                            <div className='error-msg'>{videoError}</div>
+                        </>}
+                        <label>Description</label>
+                        <textarea onChange={(e)=>setDescription(e.target.value)} placeholder='description of your course'></textarea>
 
-                    {successMsg && <div className='success-msg'>{successMsg}</div>}
-                    {uploadError && <div className='error-msg'>{uploadError}</div>}
+                        <label>Price</label>
+                        <input type='text' onChange={(e)=>{setPrice(e.target.value)}} placeholder='Enter price'/>
 
+                        <button type='submit'>add</button>
 
-                    <label>Course Title</label>
-                    <input onChange={(e) => setCoursetitle(e.target.value)} type='text' placeholder='Course title'/>
+                    </form>
+                   
 
-                    <label>Course video</label>
-                    <input onChange={handleCourseVideo} type='file'/>
-
-                    <label>Description</label>
-                    <textarea onChange={(e) => setDescription(e.target.value)}  placeholder='Course title'></textarea>
-
-                    <label>Price</label>
-                    <input onChange={(e)=> setPrice(e.target.value)} type='text' placeholder='Enter price' />
-
-                    <button type='submit'>Add</button>
-
-
-                    
-                </form>
-                    
-
-            </div> : <div>You dont have access to add courses</div>}
+                </div> : <div>You dont have access to add courses</div>}
 
         </div>
     )
