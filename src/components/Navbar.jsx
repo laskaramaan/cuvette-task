@@ -60,6 +60,7 @@ function Navbar() {
           {/* !loggeduser ka mtlb hai agar user logged in na ho to  */}
           {!loggeduser && <nav>
             <Link to='/'><button>Home</button></Link>
+            
             <Link to='/signup'><button>Register</button></Link>
             <Link to='/login'><button>Login</button></Link>
 
@@ -80,6 +81,8 @@ function Navbar() {
           {loggeduser &&
             <nav>
               <Link to='/'><button>Home</button></Link>
+              <Link to='/addcourse'><button>Add Course</button></Link>
+            
 
               <Link to='/cart'>
                 <div className='cart-btn'>

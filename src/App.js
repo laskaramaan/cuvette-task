@@ -6,6 +6,7 @@ import Login from './components/Login';
 import PgFOF from './components/PgFOF'
 import Cart from './components/Cart';
 import UserProfile from './components/UserProfile';
+import Addcourse from './components/Addcourse';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route exact path='/login' element={<Login/>} />
         <Route exact path='/cart' element={<Cart/>} />
         <Route exact path='/userprofile' element={<UserProfile/>}/>
+        <Route exact path='/addcourse' element={<Addcourse/>}/>
         <Route path="*" element={<PgFOF/>} />
         
       

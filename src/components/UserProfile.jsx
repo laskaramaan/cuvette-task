@@ -6,6 +6,8 @@ import Navbar from './Navbar'
 import './UserProfile.css'
 
 function UserProfile() {
+
+  
   function GetCurrentUser() {
     const [user, setUser] = useState('')
     const userCollectionRef = collection(db, "users")
