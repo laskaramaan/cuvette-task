@@ -8,7 +8,7 @@ import {getDownloadURL, ref, uploadBytes} from 'firebase/storage'
 
 function Addcourse() {
 
-    const [coursetitle,setcoursetitle] = useState("");
+    const [coursetitle,setcoursetitle] = useState(""); 
     const [coursecategory ,setcoursecategory] = useState("");
     const [description, setDescription] = useState("");
     const [brand, setBrand] = useState("");

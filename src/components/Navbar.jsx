@@ -41,15 +41,15 @@ function Navbar() {
 
   const navigate = useNavigate();
 
-  const handleLogout =() =>{
-    auth.signOut().then(()=>{
+  const handleLogout = () => {
+    auth.signOut().then(() => {
       navigate('/login')
 
     })
   }
 
   return (
-    <nav>
+    <div>
       <div className='navbar'>
         <div className='LeftContainer'>
           <h1>Amaan's App</h1>
@@ -60,7 +60,7 @@ function Navbar() {
           {/* !loggeduser ka mtlb hai agar user logged in na ho to  */}
           {!loggeduser && <nav>
             <Link to='/'><button>Home</button></Link>
-            
+
             <Link to='/signup'><button>Register</button></Link>
             <Link to='/login'><button>Login</button></Link>
 
@@ -82,7 +82,7 @@ function Navbar() {
             <nav>
               <Link to='/'><button>Home</button></Link>
               <Link to='/addcourse'><button>Add Course</button></Link>
-            
+
 
               <Link to='/cart'>
                 <div className='cart-btn'>
@@ -106,8 +106,16 @@ function Navbar() {
 
       </div>
 
+      <div className='product-types'>
+        <a href='/product-type/mobiles'><button>course 1</button></a>
+        <a href='/product-type/laptops'><button>course 2</button></a>
+        <a href='/product-type/camera'><button>course 3</button></a>
+        <a href='/product-type/shoes'><button>course 4</button></a>
 
-    </nav>
+
+      </div>
+
+    </div>
   )
 }
 
